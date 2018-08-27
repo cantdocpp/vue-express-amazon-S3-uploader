@@ -1,9 +1,10 @@
 const multer = require('multer');
 const aws = require('aws-sdk');
+require('dotenv').config()
 
 aws.config.update({
-  accessKeyId: "AKIAIQDXYAUW4XLJN7NA",
-  secretAccessKey: "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 "
+  accessKeyId: process.env.ACCESS_ID,
+  secretAccessKey: process.env.SECRET_KEY
 })
 
 const upload = multer({

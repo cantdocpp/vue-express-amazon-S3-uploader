@@ -4,34 +4,29 @@ const sendingImage = require('../helper/sendingImage');
 const sharp = require('sharp');
 const fs = require('fs');
 
-router.post('/upload', sendingImage.upload.single("file"), (req, res) => {
+router.post('/upload', sendingImage.single("file"), (req, res) => {
   res.json({
     file: req.file
   })
 })
 
-router.post('/multiple', sendingImage.upload.array("files"), (req, res) => {
+router.post('/multiple', sendingImage.array("files"), (req, res) => {
   res.json({
     files: req.files
   })
 })
 
-router.post('/bulkupload', sendingImage.upload.array("file"), (req, res) => {
-  var promises=[];
-  for(var i = 0; i < req.files.length; i++) {
-    var file = req.files[i];
-    promises.push(sendingImage.uploadLoadToS3(file));
-  }
-  Promise.all(promises).then(function(data){
-    res.send('Uploadedd');
-    console.log('success');
-  }).catch(function(err) {
-    console.log('failed');
-    res.send(err.stack);
-  })
+router.post('/bulkupload', sendingImage.array('files'), (req, res) => {
+    res.send({
+        status: 200,
+        data: {
+            sucess: true,
+            file: req.files
+        }
+    })
 })
 
-router.post('/dropzone', sendingImage.upload.single("file"), async (req, res) => {
+router.post('/dropzone', sendingImage.single("file"), async (req, res) => {
   try {
     await sharp(req.file.path)
     .resize(300)

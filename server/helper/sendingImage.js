@@ -1,28 +1,27 @@
-const multer = require('multer');
-const aws = require('aws-sdk');
+const aws = require('aws-sdk')
+const multer = require('multer')
+const multerS3 = require('multer-s3')
 require('dotenv').config()
 
-aws.config.update({
-  accessKeyId: process.env.ACCESS_ID,
-  secretAccessKey: process.env.SECRET_KEY
+aws.config = new aws.Config({
+    accessKeyId: process.env.ACCESS_ID,
+    secretAccessKey: process.env.SECRET_KEY,
+    region: "us-east-1"
 })
 
+const s3 = new aws.S3()
 const upload = multer({
-  dest: './uploads/'
+    storage: multerS3({
+    s3: s3,
+    acl: 'public-read',
+    bucket: 'vue-express-upload',
+    contentType: function(req, file,cb){
+        cb(null, file.mimetype)
+    },
+    key: function (req, file, cb) {
+        cb(null, file.originalname)
+    }
+    })
 })
 
-function uploadLoadToS3(ObjFile){
-  var params = {
-    ACL :'public-read',
-    Body : new Buffer(ObjFile.buffer),
-    Bucket:'vue-express-upload',
-    ContentType:ObjFile.mimetype,
-    Key:ObjFile.originalname
-  }
-  return s3.upload(params).promise();
-}
-
-module.exports = {
-  upload,
-  uploadLoadToS3
-}
+module.exports = upload

@@ -52,9 +52,10 @@ export default {
     sendFile() {
       console.log(this.sendFiles);
       let formData = new FormData()
-      _.forEach(this.uploadFiles, file => {
-        formData.append('file', file)
+      _.forEach(this.sendFiles, file => {
+        formData.append('files', file)
       })
+      console.log(formData);
       // formData.append('file', this.sendFile)
       var self = this
       axios.post('http://localhost:3000/image/bulkupload', formData)

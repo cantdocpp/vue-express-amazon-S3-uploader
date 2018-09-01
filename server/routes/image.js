@@ -3,6 +3,7 @@ var router = express.Router();
 const sendingImage = require('../helper/sendingImage');
 const sharp = require('sharp');
 const fs = require('fs');
+const imageController = require('../controller/image.controller')
 
 router.post('/upload', sendingImage.single("file"), (req, res) => {
   res.json({
@@ -16,15 +17,7 @@ router.post('/multiple', sendingImage.array("files"), (req, res) => {
   })
 })
 
-router.post('/bulkupload', sendingImage.array('files'), (req, res) => {
-    res.send({
-        status: 200,
-        data: {
-            sucess: true,
-            file: req.files
-        }
-    })
-})
+router.post('/bulkupload', sendingImage.array('files'), imageController.uploadImage)
 
 router.post('/dropzone', sendingImage.single("file"), async (req, res) => {
   try {

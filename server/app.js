@@ -5,6 +5,14 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors')
 const dotenv = require('dotenv');
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://philip:mongoose@ds231740.mlab.com:31740/ecommerce', (err) => {
+  if (err) {
+    console.log(err, 'err')
+  } else {
+    console.log('database connected')
+  }
+})
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
